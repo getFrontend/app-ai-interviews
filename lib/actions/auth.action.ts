@@ -34,29 +34,36 @@ export async function signUp(params: SignUpParams) {
     if (userRecord.exists)
       return {
         success: false,
-        message: "User already exists. Please sign in instead.",
+        message: "User already exists. Please sign in.",
       };
 
-    // save user to db
+    // save user to db with only the necessary fields
     await db.collection("users").doc(uid).set({
       name,
       email,
-      // profileURL,
-      // resumeURL,
+      createdAt: new Date().toISOString(), // Add timestamp in ISO format
     });
 
     return {
       success: true,
       message: "Account created successfully. Please sign in.",
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error creating user:", error);
 
     // Handle Firebase specific errors
-    if (error.code === "auth/email-already-exists") {
+    if ((error as { code?: string }).code === "auth/email-already-exists") {
       return {
         success: false,
         message: "This email is already in use",
+      };
+    }
+
+    // More specific error handling for decoder errors
+    if (error instanceof Error && error.message.includes("DECODER routines")) {
+      return {
+        success: false,
+        message: "Database connection error. Please try again later.",
       };
     }
 
@@ -79,8 +86,14 @@ export async function signIn(params: SignInParams) {
       };
 
     await setSessionCookie(idToken);
-  } catch (error: any) {
-    console.log("Error logging in:", error);
+    
+    // Add a success return statement
+    return {
+      success: true,
+      message: "Signed in successfully.",
+    };
+  } catch (error: unknown) {
+    console.log(error);
 
     return {
       success: false,
