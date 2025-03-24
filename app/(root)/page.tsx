@@ -25,21 +25,22 @@ async function Home() {
     <>
       <section className="card-cta">
         <div className="flex flex-col gap-6 max-w-lg">
-          <h2>Get Interview-Ready with AI-Powered Practice & Feedback</h2>
+          <h2><span className="text-orange-300">AI-Powered</span> Real-Time Interview Platform for Smarter Hiring</h2>
           <p className="text-lg">
-            Practice real interview questions & get instant feedback
+            Practice real interview questions & get instant feedback.<br />
+            For example: Frontend, Backend, Fullstack, Design, UX/UI.
           </p>
 
-          <Button asChild className="btn-primary max-sm:w-full">
+          <Button asChild className="text-lg btn-primary max-sm:w-full">
             <Link href="/interview">Start an Interview</Link>
           </Button>
         </div>
 
         <Image
           src="/robot.png"
-          alt="robo-dude"
+          alt="Robot Pytai"
           width={400}
-          height={400}
+          height={255}
           className="max-sm:hidden"
         />
       </section>

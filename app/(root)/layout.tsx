@@ -11,10 +11,10 @@ const RootLayout = async ({children }: {children: ReactNode}) => {
 
   return (
     <div className="root-layout">
-      <nav>
-        <Link href="/" className="flex items-center gap-2">
-          <Image src="/logo.svg" alt="PYTAI Logo" width={38} height={32} />
-          <h2 className="text-primary-100">PYTAI</h2>
+      <nav className='w-full'>
+        <Link href="/" className="w-1/5 flex items-center gap-2">
+          <Image src="/logo-4.png" alt="PYTAI" width={84} height={39} />
+          <span className="text-primary-100 text-2xl sm:text-[38px] font-bold">PYTAI</span>
         </Link>
       </nav>
 
