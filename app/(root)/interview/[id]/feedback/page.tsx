@@ -19,7 +19,7 @@ const Feedback = async ({ params }: RouteParams) => {
 
   const feedback = await getFeedbackByInterviewId({
     interviewId: id,
-    userId: user?.id!,
+    userId: user?.id ?? '',
   });
 
   return (
