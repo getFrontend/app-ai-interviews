@@ -1,7 +1,5 @@
-import Link from "next/link";
 import Image from "next/image";
 
-import { Button } from "@/components/ui/button";
 import InterviewCard from "@/components/InterviewCard";
 
 import { getCurrentUser } from "@/lib/actions/auth.action";
@@ -9,6 +7,7 @@ import {
   getInterviewsByUserId,
   getLatestInterviews,
 } from "@/lib/actions/general.action";
+import AnimatedCTAButton from "@/components/AnimatedCTAButton";
 
 async function Home() {
   const user = await getCurrentUser();
@@ -31,9 +30,9 @@ async function Home() {
             For example: Frontend, Backend, Fullstack, Design, UX/UI.
           </p>
 
-          <Button asChild className="text-lg btn-primary max-sm:w-full">
-            <Link href="/interview">Start an Interview</Link>
-          </Button>
+          <AnimatedCTAButton href="/interview">
+            Start an Interview
+          </AnimatedCTAButton>
         </div>
 
         <Image
