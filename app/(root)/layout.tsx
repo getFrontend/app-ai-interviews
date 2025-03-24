@@ -4,6 +4,7 @@ import { ReactNode } from 'react'
 import { redirect } from "next/navigation";
 
 import { isAuthenticated, getCurrentUser } from "@/lib/actions/auth.action";
+import SignOutButton from '@/components/SignOutButton';
 
 const RootLayout = async ({children }: {children: ReactNode}) => {
   const isUserAuthenticated = await isAuthenticated();
@@ -33,6 +34,7 @@ const RootLayout = async ({children }: {children: ReactNode}) => {
                 className="rounded-full object-cover size-[40px]"
               />
             </div>
+            <SignOutButton />
           </div>
         )}
       </nav>
