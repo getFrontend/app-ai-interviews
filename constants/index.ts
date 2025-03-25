@@ -206,4 +206,13 @@ export const interviewCovers = [
   "/telegram.png",
   "/tiktok.png",
   "/yahoo.png",
+  "/discord.png",
+  "/dropbox.png",
+  "/duckduckgo.png",
+  "/figma.png",
+  "/instagram.png",
+  "/linkedin.png",
+  "/notion.png",
+  "/shopify.png",
+  "/twitch.png",
 ];
