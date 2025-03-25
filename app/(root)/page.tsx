@@ -45,7 +45,9 @@ async function Home() {
       </section>
 
       <section className="flex flex-col gap-6 mt-8">
-        <h2>Your Interviews</h2>
+        <h2>Interviews created by { }
+          <span className="text-primary-200">{user?.name}</span>
+        </h2>
 
         <div className="interviews-section">
           {hasPastInterviews ? (
@@ -58,6 +60,7 @@ async function Home() {
                 type={interview.type}
                 techstack={interview.techstack}
                 createdAt={interview.createdAt}
+                coverImage={interview.coverImage}
               />
             ))
           ) : (
@@ -67,7 +70,7 @@ async function Home() {
       </section>
 
       <section className="flex flex-col gap-6 mt-8">
-        <h2>Take Interviews</h2>
+        <h2>All Interviews</h2>
 
         <div className="interviews-section">
           {hasUpcomingInterviews ? (
@@ -80,6 +83,7 @@ async function Home() {
                 type={interview.type}
                 techstack={interview.techstack}
                 createdAt={interview.createdAt}
+                coverImage={interview.coverImage}
               />
             ))
           ) : (

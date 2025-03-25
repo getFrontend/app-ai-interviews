@@ -15,6 +15,7 @@ const InterviewCard = async ({
   type,
   techstack,
   createdAt,
+  coverImage,
 }: InterviewCardProps) => {
   const feedback =
     userId && interviewId
@@ -37,6 +38,9 @@ const InterviewCard = async ({
     feedback?.createdAt || createdAt || Date.now()
   ).format("MMM D, YYYY");
 
+  // Use coverImage from props if available, otherwise use random cover
+  const imageSrc = coverImage || getRandomInterviewCover();
+
   return (
     <div className="card-border w-[360px] max-sm:w-full min-h-96">
       <div className="card-interview">
@@ -53,7 +57,7 @@ const InterviewCard = async ({
 
           {/* Cover Image */}
           <Image
-            src={getRandomInterviewCover()}
+            src={imageSrc}
             alt="cover-image"
             width={90}
             height={90}
