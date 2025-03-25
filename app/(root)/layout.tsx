@@ -1,10 +1,10 @@
 import Image from 'next/image'
-import Link from 'next/link'
 import { ReactNode } from 'react'
 import { redirect } from "next/navigation";
 
 import { isAuthenticated, getCurrentUser } from "@/lib/actions/auth.action";
 import SignOutButton from '@/components/SignOutButton';
+import Logo from '@/components/Logo';
 
 const RootLayout = async ({children }: {children: ReactNode}) => {
   const isUserAuthenticated = await isAuthenticated();
@@ -16,10 +16,7 @@ const RootLayout = async ({children }: {children: ReactNode}) => {
   return (
     <div className="root-layout">
       <nav className='w-full flex justify-between items-center'>
-        <Link href="/" className="flex items-center gap-2">
-          <Image src="/logo-4.png" alt="PYTAI logo" width={84} height={39} />
-          <span className="hidden sm:block text-primary-100 text-2xl sm:text-[38px] font-bold">PYTAI</span>
-        </Link>
+        <Logo link />
         
         {/* User profile section */}
         {user && (
