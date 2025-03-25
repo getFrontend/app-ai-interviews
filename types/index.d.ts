@@ -33,10 +33,12 @@ interface CreateFeedbackParams {
   feedbackId?: string;
 }
 
+// Add emailVerified to the User interface
 interface User {
   name: string;
   email: string;
   id: string;
+  emailVerified?: boolean;
 }
 
 interface InterviewCardProps {

@@ -84,10 +84,17 @@ export async function signIn(params: SignInParams) {
         success: false,
         message: "User does not exist. Create an account.",
       };
+    
+    // Check if email is verified
+    if (!userRecord.emailVerified) {
+      return {
+        success: false,
+        message: "Please verify your email before signing in.",
+      };
+    }
 
     await setSessionCookie(idToken);
     
-    // Add a success return statement
     return {
       success: true,
       message: "Signed in successfully.",
@@ -110,6 +117,7 @@ export async function signOut() {
 }
 
 // Get current user from session cookie
+// Update getCurrentUser to check email verification
 export async function getCurrentUser(): Promise<User | null> {
   const cookieStore = await cookies();
 
@@ -125,6 +133,16 @@ export async function getCurrentUser(): Promise<User | null> {
       .doc(decodedClaims.uid)
       .get();
     if (!userRecord.exists) return null;
+    
+    // Get the user from Auth to check email verification
+    const authUser = await auth.getUser(decodedClaims.uid);
+    
+    // If email is not verified, don't allow access
+    if (!authUser.emailVerified) {
+      // Clear the session cookie
+      cookieStore.delete("session");
+      return null;
+    }
 
     return {
       ...userRecord.data(),
