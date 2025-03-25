@@ -270,7 +270,7 @@
   }
 
   .interviews-section {
-    @apply flex flex-wrap gap-4 max-lg:flex-col w-full items-stretch;
+    @apply flex flex-wrap gap-4 max-md:flex-col w-full items-stretch;
   }
 
   .interview-text {

@@ -18,7 +18,7 @@ const RootLayout = async ({children }: {children: ReactNode}) => {
       <nav className='w-full flex justify-between items-center'>
         <Link href="/" className="flex items-center gap-2">
           <Image src="/logo-4.png" alt="PYTAI logo" width={84} height={39} />
-          <span className="text-primary-100 text-2xl sm:text-[38px] font-bold">PYTAI</span>
+          <span className="hidden sm:block text-primary-100 text-2xl sm:text-[38px] font-bold">PYTAI</span>
         </Link>
         
         {/* User profile section */}

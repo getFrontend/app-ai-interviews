@@ -22,8 +22,8 @@ async function Home() {
 
   return (
     <>
-      <section className="card-cta">
-        <div className="flex flex-col gap-6 max-w-lg">
+      <section className="card-cta flex-col-reverse md:flex-row items-center">
+        <div className="flex flex-col gap-6 max-w-md mt-6 sm:mt-0">
           <h2><span className="text-orange-300">AI-Powered</span> Real-Time Interview Platform for Smarter Hiring</h2>
           <p className="text-lg">
             Practice real interview questions & get instant feedback.<br />
@@ -39,8 +39,8 @@ async function Home() {
           src="/robot.png"
           alt="Robot Pytai"
           width={400}
-          height={255}
-          className="max-sm:hidden"
+          height={254}
+          className="w-[250px] sm:w-[400px] mx-auto mb-0 sm:mx-0 sm:mb-4 md:mb-0"
         />
       </section>
 
