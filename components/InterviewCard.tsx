@@ -28,10 +28,10 @@ const InterviewCard = async ({
 
   const badgeColor =
     {
-      Behavioral: "bg-light-400",
-      Mixed: "bg-light-600",
-      Technical: "bg-light-800",
-    }[normalizedType] || "bg-light-600";
+      Behavioral: "bg-light-800",
+      Mixed: "bg-yellow-600",
+      Technical: "bg-blue-600",
+    }[normalizedType] || "bg-violet-600";
 
   const formattedDate = dayjs(
     feedback?.createdAt || createdAt || Date.now()
