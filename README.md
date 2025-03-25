@@ -176,8 +176,9 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 [MIT License](LICENSE) - Feel free to use and modify this project for your needs.
 
+------------
 
-<div align="center">
-  <p>Built with ❤️ using Next.js 15, Vapi AI and Google Gemini</p>
-  <p>© 2025 Pytai AI by Sergey. All rights reserved.</p>
-</div>
+Built with ❤️ using [JSMastery](https://www.youtube.com/@javascriptmastery/videos), Next.js 15, Vapi AI and Google Gemini
+
+© 2025 Pytai AI by Sergey. All rights reserved.</p>
+
