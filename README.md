@@ -1,7 +1,7 @@
 # AI-Powered Real-Time Interview Platform
 
 <div align="center">
-  <img src="public/logo-4.png" alt="Pytai Logo" width="150" height="70" />
+  <img src="public/pytai-logo-promo.png" alt="Pytai Logo" width="100%" />
 </div>
 
 ## Overview
