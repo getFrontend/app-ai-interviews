@@ -8,6 +8,7 @@ import {
   getLatestInterviews,
 } from "@/lib/actions/general.action";
 import AnimatedCTAButton from "@/components/AnimatedCTAButton";
+import Footer from "@/components/Footer";
 
 async function Home() {
   const user = await getCurrentUser();
@@ -91,6 +92,8 @@ async function Home() {
           )}
         </div>
       </section>
+
+      <Footer />
     </>
   );
 }
