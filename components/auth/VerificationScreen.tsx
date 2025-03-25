@@ -25,15 +25,16 @@ const VerificationScreen = ({
       
       <div className="text-center">
         <p className="mb-4">
-          A verification email has been sent to <strong>{userEmail}</strong>.
-          Please check your inbox and click the verification link.
+          A verification email has been sent to: { }
+          <span className=" text-primary-200 text-xl font-semibold">{userEmail}</span>
         </p>
         
         <p className="mb-6 text-sm text-light-300">
+          Please check your inbox and click the verification link.
           If you don&apos;t see the email, check your spam folder.
         </p>
         
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-4 items-center">
           <Button 
             onClick={onResendVerification} 
             disabled={isResending}
