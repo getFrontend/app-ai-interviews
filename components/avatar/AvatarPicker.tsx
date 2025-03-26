@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { PlusCircle } from "lucide-react";
+import { toast } from "sonner";
 import AvatarModal from "@/components/avatar/AvatarModal";
 import { updateUserAvatar } from "@/lib/actions/auth.action";
 
@@ -23,12 +24,19 @@ const AvatarPicker = ({ currentAvatar, userId, userName }: AvatarPickerProps) =>
     
     // Update the user's avatar in the database
     try {
-      await updateUserAvatar({
+      const result = await updateUserAvatar({
         userId,
         photoURL: newAvatar
       });
+      
+      if (result.success) {
+        toast.success("Your avatar updated successfully!");
+      } else {
+        toast.error("Failed to update avatar..");
+      }
     } catch (error) {
       console.error("Failed to update avatar:", error);
+      toast.error("Failed to update avatar..");
     }
   };
 
