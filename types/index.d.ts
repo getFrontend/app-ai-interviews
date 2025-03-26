@@ -22,7 +22,9 @@ interface Interview {
   createdAt: string;
   userId: string;
   type: string;
-  coverImage: string;
+  coverImage?: string;
+  level?: string;
+  questions?: string[];
   finalized: boolean;
 }
 
@@ -49,6 +51,8 @@ interface InterviewCardProps {
   techstack: string[];
   createdAt?: string;
   coverImage?: string;
+  level?: string;
+  questions?: string[];
 }
 
 interface AgentProps {

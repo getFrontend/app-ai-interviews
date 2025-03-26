@@ -16,6 +16,8 @@ const InterviewCard = async ({
   techstack,
   createdAt,
   coverImage,
+  level,
+  questions,
 }: InterviewCardProps) => {
   const feedback =
     userId && interviewId
@@ -27,12 +29,24 @@ const InterviewCard = async ({
 
   const normalizedType = /mix/gi.test(type) ? "Mixed" : type;
 
-  const badgeColor =
+  // Type badge color mapping
+  const typeBadgeColor =
     {
       Behavioral: "bg-light-800",
       Mixed: "bg-yellow-600",
       Technical: "bg-blue-600",
     }[normalizedType] || "bg-violet-600";
+
+  // Level badge color mapping
+  const levelBadgeColor = {
+    "entry level": "bg-emerald-600",
+    beginner: "bg-teal-600",
+    junior: "bg-lime-600",
+    intermediate: "bg-amber-500",
+    senior: "bg-orange-500",
+    advanced: "bg-sky-600",
+    expert: "bg-indigo-600",
+  }[level?.toLowerCase() || "beginner"] || "bg-green-600";
 
   const formattedDate = dayjs(
     feedback?.createdAt || createdAt || Date.now()
@@ -43,16 +57,26 @@ const InterviewCard = async ({
 
   return (
     <div className="card-border w-[360px] max-sm:w-full min-h-96">
-      <div className="card-interview">
+      <div className="card-interview relative">
         <div>
-          {/* Type Badge */}
+          {/* Type Badge - Top Right */}
           <div
             className={cn(
-              "absolute top-0 right-0 w-fit px-4 py-2 rounded-bl-lg",
-              badgeColor
+              "absolute top-0 right-0 w-fit px-4 py-2 rounded-bl-lg z-10",
+              typeBadgeColor
             )}
           >
-            <p className="badge-text">{normalizedType}</p>
+            <p className="badge-text font-medium text-white">{normalizedType}</p>
+          </div>
+
+          {/* Level Badge - Top Left */}
+          <div
+            className={cn(
+              "absolute top-0 left-0 w-fit px-4 py-2 rounded-br-lg z-10",
+              levelBadgeColor
+            )}
+          >
+            <p className="badge-text font-medium text-white capitalize">{level || "Beginner"}</p>
           </div>
 
           {/* Cover Image */}
@@ -61,27 +85,44 @@ const InterviewCard = async ({
             alt="cover-image"
             width={90}
             height={90}
-            className="rounded-full object-fit size-[90px]"
+            className="rounded-full object-fit size-[90px] mt-6"
           />
 
           {/* Interview Role */}
           <h3 className="mt-5 capitalize">{role} Interview</h3>
 
-          {/* Date & Score */}
-          <div className="flex flex-row gap-5 mt-3">
+          {/* Date & Score & Questions Count */}
+          <div className="flex flex-row flex-wrap gap-5 mt-3">
             <div className="flex flex-row gap-2">
               <Image
                 src="/calendar.svg"
                 width={22}
                 height={22}
-                alt="calendar"
+                alt="calendar icon"
               />
               <p>{formattedDate}</p>
             </div>
 
             <div className="flex flex-row gap-2 items-center">
-              <Image src="/star.svg" width={22} height={22} alt="star" />
+              <Image 
+                src="/star-2.svg" 
+                width={22} 
+                height={22} 
+                alt="star icon"
+              />
               <p>{feedback?.totalScore || "---"}/100</p>
+            </div>
+            
+            <div className="flex flex-row gap-2 items-center">
+              <Image 
+                src="/question.svg" 
+                width={22} 
+                height={22} 
+                alt="question icon" 
+              />
+              <p>
+                {questions?.length || 0} {questions?.length === 1 ? "question" : "questions"}
+              </p>
             </div>
           </div>
 

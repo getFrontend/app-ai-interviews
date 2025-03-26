@@ -62,6 +62,8 @@ async function Home() {
                 techstack={interview.techstack}
                 createdAt={interview.createdAt}
                 coverImage={interview.coverImage}
+                level={interview.level}
+                questions={interview.questions}
               />
             ))
           ) : (
@@ -85,6 +87,8 @@ async function Home() {
                 techstack={interview.techstack}
                 createdAt={interview.createdAt}
                 coverImage={interview.coverImage}
+                level={interview.level}
+                questions={interview.questions}
               />
             ))
           ) : (
