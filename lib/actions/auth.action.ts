@@ -46,6 +46,22 @@ export async function signUp(params: SignUpParams) {
       };
     }
 
+    // For Google users, get their profile photo
+    let photoURL = "/user-avatar.jpg"; // Default avatar
+    
+    if (!password) {
+      try {
+        // Get the user from Firebase Auth
+        const authUser = await auth.getUser(uid);
+        if (authUser.photoURL) {
+          photoURL = authUser.photoURL;
+        }
+      } catch (photoError) {
+        console.error("Error getting user photo:", photoError);
+        // Continue with default photo if there's an error
+      }
+    }
+    
     // save user to db with only the necessary fields
     await db.collection("users").doc(uid).set({
       name,
@@ -53,8 +69,8 @@ export async function signUp(params: SignUpParams) {
       createdAt: new Date().toISOString(),
       // If the user signed up with Google, store that information
       authProvider: password ? "email" : "google",
-      // Add a default photoURL for Google users
-      photoURL: password ? "/avatars/user-avatar-img-1.jpg" : null,
+      // Use the Google profile photo if available, otherwise use default
+      photoURL: photoURL,
     });
 
     return {
@@ -65,7 +81,7 @@ export async function signUp(params: SignUpParams) {
     };
   } catch (error: unknown) {
     console.error("Error creating user:", error);
-
+    
     // Handle Firebase specific errors
     if ((error as { code?: string }).code === "auth/email-already-exists") {
       return {

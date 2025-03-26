@@ -175,22 +175,17 @@ const AuthForm = ({ type }: { type: FormType }) => {
                 prompt: 'select_account'
             });
             
-            const userCredential = await signInWithPopup(auth, provider);
-            
-            // Get user info
-            const user = userCredential.user;
-            
-            // Google users are always verified, so we don't need to check
-            
-            // Get the ID token
-            const idToken = await user.getIdToken();
-            
-            // Check if it's a new user
-            const isNewUser = (userCredential as { _tokenResponse?: { isNewUser?: boolean } })._tokenResponse?.isNewUser ||
-                             (userCredential as { additionalUserInfo?: { isNewUser?: boolean } }).additionalUserInfo?.isNewUser;
-            
-            // If it's a new user, create a record in your database
-            if (isNewUser) {
+            try {
+                const userCredential = await signInWithPopup(auth, provider);
+                
+                // Get user info
+                const user = userCredential.user;
+                
+                // Get the ID token
+                const idToken = await user.getIdToken();
+
+                
+                // Always try to create/update the user record in your database
                 const signUpResult = await signUp({
                     uid: user.uid,
                     name: user.displayName || 'User',
@@ -203,24 +198,34 @@ const AuthForm = ({ type }: { type: FormType }) => {
                     setIsGoogleLoading(false);
                     return;
                 }
+                
+                // Sign in the user with your backend
+                const signInResult = await signIn({
+                    email: user.email || '',
+                    idToken
+                });
+                
+                if (!signInResult?.success) {
+                    toast.error(signInResult?.message || 'Failed to sign in');
+                    setIsGoogleLoading(false);
+                    return;
+                }
+                
+                toast.success('Signed in successfully with Google');
+                
+                // Use router.replace instead of push to avoid navigation issues
+                router.replace('/');
+            } catch (popupError: unknown) {
+                console.error("Popup error:", popupError);
+                
+                if ((popupError as { code?: string }).code === 'auth/popup-closed-by-user' ||
+                    (popupError as { code?: string }).code === 'auth/popup-blocked' ||
+                    (popupError as Error).message?.includes('Cross-Origin-Opener-Policy')) {
+                    
+                    toast.error('Popup authentication failed. Please try again.');
+                    throw popupError; // Re-throw to be caught by the outer catch
+                }
             }
-            
-            // Sign in the user with your backend
-            const signInResult = await signIn({
-                email: user.email || '',
-                idToken
-            });
-            
-            if (!signInResult?.success) {
-                toast.error(signInResult?.message || 'Failed to sign in');
-                setIsGoogleLoading(false);
-                return;
-            }
-            
-            toast.success('Signed in successfully with Google');
-            
-            // Use router.replace instead of push to avoid navigation issues
-            router.replace('/');
         } catch (error: unknown) {
             console.error('Google sign-in error:', error);
             
