@@ -35,11 +35,12 @@ interface CreateFeedbackParams {
   feedbackId?: string;
 }
 
-// Add emailVerified to the User interface
+// Add photoURL to your existing User interface
 interface User {
+  id: string;
   name: string;
   email: string;
-  id: string;
+  photoURL?: string;
   emailVerified?: boolean;
 }
 
@@ -55,6 +56,7 @@ interface InterviewCardProps {
   questions?: string[];
 }
 
+// Add userAvatar to the AgentProps interface
 interface AgentProps {
   userName: string;
   userId?: string;
@@ -62,6 +64,7 @@ interface AgentProps {
   feedbackId?: string;
   type: "generate" | "interview";
   questions?: string[];
+  userAvatar?: string;
 }
 
 interface RouteParams {

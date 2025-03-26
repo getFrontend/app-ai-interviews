@@ -161,3 +161,26 @@ export async function isAuthenticated() {
   const user = await getCurrentUser();
   return !!user;
 }
+
+// Add this function to your existing auth.action.ts file
+
+export async function updateUserAvatar({ 
+  userId, 
+  photoURL 
+}: { 
+  userId: string; 
+  photoURL: string;
+}) {
+  try {
+    const userRef = db.collection("users").doc(userId);
+    
+    await userRef.update({
+      photoURL
+    });
+    
+    return { success: true, message: "Your avatar was updated successfully!"};
+  } catch (error) {
+    console.error("Error updating user avatar:", error);
+    return { success: false, error };
+  }
+}
