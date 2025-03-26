@@ -25,28 +25,43 @@ export async function setSessionCookie(idToken: string) {
   });
 }
 
+// Add this to your existing signUp function to handle Google sign-in
 export async function signUp(params: SignUpParams) {
-  const { uid, name, email } = params;
+  const { uid, name, email, password } = params;
 
   try {
     // check if user exists in db
     const userRecord = await db.collection("users").doc(uid).get();
-    if (userRecord.exists)
+    if (userRecord.exists) {
+      // For Google sign-in, we should allow existing users to sign in
+      if (!password) {
+        return {
+          success: true,
+          message: "Google account already exists. Proceeding with sign-in.",
+        };
+      }
       return {
         success: false,
         message: "User already exists. Please sign in.",
       };
+    }
 
     // save user to db with only the necessary fields
     await db.collection("users").doc(uid).set({
       name,
       email,
-      createdAt: new Date().toISOString(), // Add timestamp in ISO format
+      createdAt: new Date().toISOString(),
+      // If the user signed up with Google, store that information
+      authProvider: password ? "email" : "google",
+      // Add a default photoURL for Google users
+      photoURL: password ? "/avatars/user-avatar-img-1.jpg" : null,
     });
 
     return {
       success: true,
-      message: "Account created successfully. Please sign in.",
+      message: password 
+        ? "Account created successfully. Please sign in." 
+        : "Google account created successfully.",
     };
   } catch (error: unknown) {
     console.error("Error creating user:", error);
@@ -85,8 +100,13 @@ export async function signIn(params: SignInParams) {
         message: "User does not exist. Create an account.",
       };
     
-    // Check if email is verified
-    if (!userRecord.emailVerified) {
+    // Get user from Firestore to check auth provider
+    const firestoreUser = await db.collection("users").doc(userRecord.uid).get();
+    const userData = firestoreUser.data();
+    const isGoogleUser = userData?.authProvider === "google";
+    
+    // Skip email verification check for Google users as they're already verified
+    if (!userRecord.emailVerified && !isGoogleUser) {
       return {
         success: false,
         message: "Please verify your email before signing in.",
@@ -134,11 +154,14 @@ export async function getCurrentUser(): Promise<User | null> {
       .get();
     if (!userRecord.exists) return null;
     
+    const userData = userRecord.data();
+    const isGoogleUser = userData?.authProvider === "google";
+    
     // Get the user from Auth to check email verification
     const authUser = await auth.getUser(decodedClaims.uid);
     
-    // If email is not verified, don't allow access
-    if (!authUser.emailVerified) {
+    // Skip email verification check for Google users
+    if (!authUser.emailVerified && !isGoogleUser) {
       // Clear the session cookie
       cookieStore.delete("session");
       return null;
