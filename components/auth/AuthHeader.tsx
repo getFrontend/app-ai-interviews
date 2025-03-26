@@ -7,7 +7,6 @@ interface AuthHeaderProps {
 const AuthHeader = ({ title }: AuthHeaderProps) => {
   return (
     <>
-      {/* <Logo className="justify-center" />     */}
       <div className="flex items-center justify-center">
         <Image src="/logo-auth.png" alt="PYTAI logo" width={140} height={50} />
       </div>
