@@ -8,6 +8,7 @@ import {
   getLatestInterviews,
 } from "@/lib/actions/general.action";
 import AnimatedCTAButton from "@/components/AnimatedCTAButton";
+import AnimatedText from "@/components/AnimatedText";
 import Footer from "@/components/Footer";
 
 async function Home() {
@@ -25,13 +26,18 @@ async function Home() {
     <>
       <section className="card-cta flex-col-reverse md:flex-row items-center">
         <div className="flex flex-col gap-6 max-w-md mt-6 sm:mt-0">
-          <h2><span className="text-orange-300">AI-Powered</span> Real-Time Interview Platform for Smarter Hiring</h2>
-          <p className="text-lg">
-            Practice real interview questions & get instant feedback.<br />
-            For example: Frontend, Backend, Fullstack, Design, UX/UI.
-          </p>
+          <AnimatedText delay={0.1}>
+            <h2><span className="text-orange-300">AI-Powered</span> Real-Time Interview Platform for Smarter Hiring</h2>
+          </AnimatedText>
+          
+          <AnimatedText delay={0.2}>
+            <p className="text-lg">
+              Practice real interview questions & get instant feedback.<br />
+              For example: Frontend, Backend, Fullstack, Design, UX/UI.
+            </p>
+          </AnimatedText>
 
-          <AnimatedCTAButton href="/interview">
+          <AnimatedCTAButton href="/interview" delay={0.3}>
             Create an Interview
           </AnimatedCTAButton>
         </div>

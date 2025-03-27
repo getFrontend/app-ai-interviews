@@ -9,12 +9,14 @@ interface AnimatedCTAButtonProps {
   href: string;
   children: React.ReactNode;
   className?: string;
+  delay?: number;
 }
 
 const AnimatedCTAButton = ({ 
   href, 
   children, 
-  className = "" 
+  className = "",
+  delay = 0.2
 }: AnimatedCTAButtonProps) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isPulsing, setIsPulsing] = useState(false);
@@ -73,7 +75,7 @@ const AnimatedCTAButton = ({
         transition={{ 
           duration: 0.5,
           ease: "easeOut",
-          delay: 0.2
+          delay: delay
         }}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
