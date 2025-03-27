@@ -303,7 +303,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
             {/* Divider */}
             <div className="relative flex items-center justify-center mt-6 mb-4">
               <div className="absolute border-t border-gray-700 w-full"></div>
-              <span className="relative px-4 bg-gray-700 text-light-300 text-sm rounded-lg">or continue with</span>
+              <span className="relative px-4 bg-gray-700 text-light-300 text-sm rounded-lg">or</span>
             </div>
             
             {/* Google Sign In Button */}

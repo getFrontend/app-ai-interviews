@@ -32,7 +32,7 @@ async function Home() {
           </p>
 
           <AnimatedCTAButton href="/interview">
-            Start an Interview
+            Create an Interview
           </AnimatedCTAButton>
         </div>
 
