@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import { vapi } from "@/lib/vapi.sdk";
 import { interviewer } from "@/constants";
 import { createFeedback } from "@/lib/actions/general.action";
+import CallHint from "@/components/CallHint";
 
 enum CallStatus {
   INACTIVE = "INACTIVE",
@@ -35,6 +36,7 @@ const Agent = ({
   const [messages, setMessages] = useState<SavedMessage[]>([]);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [lastMessage, setLastMessage] = useState<string>("");
+  const [showCallHint, setShowCallHint] = useState(true);
   
   useEffect(() => {
     const onCallStart = () => {
@@ -189,9 +191,22 @@ const Agent = ({
         </div>
       )}
 
-      <div className="w-full flex justify-center">
+      <div className="w-full flex justify-center relative">
+        {callStatus === CallStatus.INACTIVE && showCallHint && (
+          <CallHint 
+            targetId="call-button"
+            timeoutDuration={10000}
+            text={type === "generate" ? "Click CALL to generate the interview" : "Click CALL to start the interview"}
+            onDismiss={() => setShowCallHint(false)}
+          />
+        )}
+        
         {callStatus !== "ACTIVE" ? (
-          <button className="relative btn-call" onClick={() => handleCall()}>
+          <button 
+            id="call-button" 
+            className="relative btn-call" 
+            onClick={() => handleCall()}
+          >
             <span
               className={cn(
                 "absolute animate-ping rounded-full opacity-75",
