@@ -1,88 +1,124 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
+import { motion } from "framer-motion";
 
 interface AnimatedCTAButtonProps {
   href: string;
   children: React.ReactNode;
+  className?: string;
 }
 
-const AnimatedCTAButton = ({ href, children }: AnimatedCTAButtonProps) => {
+const AnimatedCTAButton = ({ 
+  href, 
+  children, 
+  className = "" 
+}: AnimatedCTAButtonProps) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isPulsing, setIsPulsing] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
-  const particlesRef = useRef<Array<{top: string, left: string}>>([]);
 
-  // Initialize particle positions once on client
+  // Initialize on client-side
   useEffect(() => {
     setIsMounted(true);
     
-    // Pre-calculate particle positions
-    particlesRef.current = Array(5).fill(0).map(() => ({
-      top: `${Math.floor(Math.random() * 100)}%`,
-      left: `${Math.floor(Math.random() * 100)}%`
-    }));
+    // Initial pulse to draw attention
+    setTimeout(() => {
+      setIsPulsing(true);
+      setTimeout(() => setIsPulsing(false), 1200);
+    }, 1000);
+    
+    // Periodic pulse effect
+    const interval = setInterval(() => {
+      setIsPulsing(true);
+      setTimeout(() => setIsPulsing(false), 1200);
+    }, 8000);
+    
+    return () => clearInterval(interval);
   }, []);
 
-  // Create a pulsing effect every few seconds to draw attention
-  useEffect(() => {
-    if (!isMounted) return;
-    
-    const pulseInterval = setInterval(() => {
-      setIsPulsing(true);
-      setTimeout(() => setIsPulsing(false), 1000);
-    }, 5000);
-    
-    return () => clearInterval(pulseInterval);
-  }, [isMounted]);
+  if (!isMounted) {
+    return null; // Prevent SSR flash
+  }
 
   return (
-    <div className="relative group w-fit">
-      {/* Animated background glow effect */}
-      <div 
-        className={`absolute -inset-0.5 bg-gradient-to-r from-orange-400 via-pink-500 to-purple-600 rounded-lg blur-[8px] 
-        opacity-70 group-hover:opacity-100 transition-all duration-300
-        ${isPulsing && isMounted ? 'animate-pulse' : ''}`}
-      ></div>
+    <div className="relative inline-block mx-auto">
+      {/* Glow effect */}
+      <motion.div
+        className="absolute inset-0 rounded-full bg-gradient-to-r from-purple-600 via-pink-500 to-orange-400 opacity-70 blur-lg"
+        style={{ 
+          padding: '8px',
+          margin: '-8px',
+          background: 'linear-gradient(90deg, rgba(124, 58, 237, 0.8) 0%, rgba(236, 72, 153, 0.8) 50%, rgba(234, 88, 12, 0.8) 100%)'
+        }}
+        initial={{ opacity: 0 }}
+        animate={{ 
+          opacity: isPulsing ? [0.6, 0.9, 0.6] : 0.6,
+        }}
+        transition={{ 
+          duration: 1.5,
+          ease: "easeInOut",
+          repeat: Infinity,
+        }}
+        whileHover={{ opacity: 0.9 }}
+      />
       
-      {/* Subtle particles effect (dots) - only rendered client-side */}
-      {isMounted && (
-        <div className="absolute inset-0 overflow-hidden rounded-lg">
-          {particlesRef.current.map((pos, i) => (
-            <div 
-              key={i}
-              className={`absolute w-1 h-1 bg-white rounded-full opacity-0 group-hover:opacity-70 animate-float-${i+1}`}
-              style={{
-                top: pos.top,
-                left: pos.left,
-                animationDelay: `${i * 0.2}s`
-              }}
-            ></div>
-          ))}
-        </div>
-      )}
-      
-      <Button 
-        asChild 
-        className={`relative text-lg max-sm:w-full transition-all duration-300 ease-in-out 
-        transform group-hover:scale-105 group-hover:shadow-lg
-        ${isPulsing && isMounted ? 'scale-[1.03]' : ''}`}
+      {/* Button */}
+      <motion.div
+        className="relative"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ 
+          duration: 0.5,
+          ease: "easeOut",
+          delay: 0.2
+        }}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-        <Link href={href} className="flex items-center gap-2">
-          {children}
-          <ArrowRight 
-            className={`transition-all duration-300 
-            ${isHovered ? 'translate-x-1' : ''} 
-            ${isPulsing && isMounted ? 'animate-bounce-x' : ''}`} 
-            size={20} 
-          />
+        <Link href={href}>
+          <motion.button 
+            className={`relative px-5 py-2.5 bg-white dark:bg-orange-300 text-black dark:text-black rounded-full font-medium text-lg flex items-center gap-2 cursor-pointer ${className}`}
+          >
+            <span>{children}</span>
+            
+            <motion.div
+              animate={{ 
+                x: isHovered ? 8 : [0, 4, 0]
+              }}
+              transition={{ 
+                x: {
+                  duration: isHovered ? 0.2 : 2,
+                  ease: isHovered ? "easeOut" : "easeInOut",
+                  repeat: isHovered ? 0 : Infinity,
+                  repeatType: "reverse"
+                }
+              }}
+            >
+              <ArrowRight size={18} />
+            </motion.div>
+            
+            {/* Subtle shine effect */}
+            {isHovered && (
+              <motion.div 
+                className="absolute inset-0 overflow-hidden rounded-full"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              >
+                <motion.div 
+                  className="w-20 h-full bg-white/50 blur-md absolute -skew-x-12"
+                  initial={{ left: "-20%" }}
+                  animate={{ left: "120%" }}
+                  transition={{ duration: 1.2, ease: "easeInOut" }}
+                />
+              </motion.div>
+            )}
+          </motion.button>
         </Link>
-      </Button>
+      </motion.div>
     </div>
   );
 };
