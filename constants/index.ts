@@ -1,4 +1,5 @@
 import { CreateAssistantDTO } from "@vapi-ai/web/dist/api";
+import { and } from "firebase/firestore";
 import { z } from "zod";
 
 export const mappings = {
@@ -99,6 +100,19 @@ export const mappings = {
   google: "google",
   chrome: "chrome",
   jira: "jira",
+  android: "android",
+  slack: "slack",
+  java: "java",
+  kotlin: "kotlin",
+  swift: "swift",
+  objectivec: "objective-c",
+  "objective c": "objective-c",
+  "objective-c": "objective-c",
+  "objective-c++": "objective-c",
+  "objective c++": "objective-c",
+  "spring": "spring",
+  "spring framework": "spring",
+  hibernate: "hibernate",
 };
 
 export const interviewer: CreateAssistantDTO = {
