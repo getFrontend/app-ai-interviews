@@ -1,5 +1,4 @@
 import { CreateAssistantDTO } from "@vapi-ai/web/dist/api";
-import { and } from "firebase/firestore";
 import { z } from "zod";
 
 export const mappings = {
