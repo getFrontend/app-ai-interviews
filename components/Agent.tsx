@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 
 import { cn } from "@/lib/utils";
@@ -37,10 +37,35 @@ const Agent = ({
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [lastMessage, setLastMessage] = useState<string>("");
   const [showCallHint, setShowCallHint] = useState(true);
+  const [lastActivityTimestamp, setLastActivityTimestamp] = useState<number>(Date.now());
+  const INACTIVITY_TIMEOUT = 30000; // 30 seconds of inactivity will end the call
+
+  // Use useCallback to memoize the function
+  const handleDisconnect = useCallback(() => {
+    setCallStatus(CallStatus.FINISHED);
+    vapi.stop();
+  }, []);
   
+  // Inactivity monitor
+  useEffect(() => {
+    if (callStatus !== CallStatus.ACTIVE) return;
+    
+    const inactivityTimer = setInterval(() => {
+      const now = Date.now();
+      if (now - lastActivityTimestamp > INACTIVITY_TIMEOUT) {
+        console.log("Inactivity timeout reached, ending call");
+        handleDisconnect();
+      }
+    }, 5000); // Check every 5 seconds
+    
+    return () => clearInterval(inactivityTimer);
+  }, [callStatus, lastActivityTimestamp, handleDisconnect, INACTIVITY_TIMEOUT]);
+  
+  // VAPI event handlers
   useEffect(() => {
     const onCallStart = () => {
       setCallStatus(CallStatus.ACTIVE);
+      setLastActivityTimestamp(Date.now()); // Update timestamp on call start
     };
 
     const onCallEnd = () => {
@@ -49,6 +74,7 @@ const Agent = ({
 
     const onMessage = (message: Message) => {
       if (message.type === "transcript" && message.transcriptType === "final") {
+        setLastActivityTimestamp(Date.now()); // Update timestamp when message received
         const newMessage = { role: message.role, content: message.transcript };
         setMessages((prev) => [...prev, newMessage]);
       }
@@ -56,6 +82,7 @@ const Agent = ({
 
     const onSpeechStart = () => {
       console.log("Speech start!");
+      setLastActivityTimestamp(Date.now()); // Update timestamp when speech starts
       setIsSpeaking(true);
     };
 
@@ -66,6 +93,21 @@ const Agent = ({
 
     const onError = (error: Error) => {
       console.log("Error:", error);
+      
+      // More robust error handling for meeting ended errors
+      if (
+        (typeof error === 'object' && error !== null) && 
+        (
+          // Check various possible error message formats
+          (error.message && error.message.includes("Meeting has ended")) ||
+          (error.toString().includes("Meeting has ended")) ||
+          (JSON.stringify(error).includes("Meeting has ended"))
+        )
+      ) {
+        console.log("Detected meeting end, transitioning to FINISHED state");
+        setCallStatus(CallStatus.FINISHED);
+        vapi.stop(); // Ensure VAPI is properly stopped
+      }
     };
 
     vapi.on("call-start", onCallStart);
@@ -83,8 +125,9 @@ const Agent = ({
       vapi.off("speech-end", onSpeechEnd);
       vapi.off("error", onError);
     };
-  }, []);
+  }, []); // Empty dependency array - only run once
 
+  // Handle messages and call status changes
   useEffect(() => {
     if (messages.length > 0) {
       setLastMessage(messages[messages.length - 1].content);
@@ -141,11 +184,6 @@ const Agent = ({
         },
       });
     }
-  };
-
-  const handleDisconnect = () => {
-    setCallStatus(CallStatus.FINISHED);
-    vapi.stop();
   };
 
     return (
