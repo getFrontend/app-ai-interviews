@@ -187,6 +187,10 @@ const Agent = ({
 
     if (callStatus === CallStatus.FINISHED) {
       if (type === "generate") {
+        toast.success("Interview generated successfully!", {
+          duration: 3000,
+          id: "generate-toast"
+        });
         router.push("/");
       } else {
         handleGenerateFeedback(messages);
@@ -198,6 +202,11 @@ const Agent = ({
     setCallStatus(CallStatus.CONNECTING);
 
     if (type === "generate") {
+      toast.loading("Generating your interview questions...", {
+        duration: 10000,
+        id: "generate-toast"
+      });
+      
       await vapi.start(process.env.NEXT_PUBLIC_VAPI_WORKFLOW_ID!, {
         variableValues: {
           username: userName,
