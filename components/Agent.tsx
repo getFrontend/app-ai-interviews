@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 import { cn } from "@/lib/utils";
 import { vapi } from "@/lib/vapi.sdk";
@@ -38,9 +39,13 @@ const Agent = ({
   const [lastMessage, setLastMessage] = useState<string>("");
   const [showCallHint, setShowCallHint] = useState(true);
   const [lastActivityTimestamp, setLastActivityTimestamp] = useState<number>(Date.now());
-  const INACTIVITY_TIMEOUT = 30000; // 30 seconds of inactivity will end the call
+  const INACTIVITY_TIMEOUT = process.env.NEXT_PUBLIC_VAPI_INACTIVITY_TIMEOUT 
+                            ? parseInt(process.env.NEXT_PUBLIC_VAPI_INACTIVITY_TIMEOUT) 
+                            : 10000; // time of inactivity will end the call
+  // Add question tracking
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const totalQuestions = questions?.length || 0;
 
-  // Use useCallback to memoize the function
   const handleDisconnect = useCallback(() => {
     setCallStatus(CallStatus.FINISHED);
     vapi.stop();
@@ -65,7 +70,7 @@ const Agent = ({
   useEffect(() => {
     const onCallStart = () => {
       setCallStatus(CallStatus.ACTIVE);
-      setLastActivityTimestamp(Date.now()); // Update timestamp on call start
+      setLastActivityTimestamp(Date.now());
     };
 
     const onCallEnd = () => {
@@ -74,9 +79,29 @@ const Agent = ({
 
     const onMessage = (message: Message) => {
       if (message.type === "transcript" && message.transcriptType === "final") {
-        setLastActivityTimestamp(Date.now()); // Update timestamp when message received
+        setLastActivityTimestamp(Date.now());
         const newMessage = { role: message.role, content: message.transcript };
         setMessages((prev) => [...prev, newMessage]);
+        
+        // Track question progress - increment counter when AI asks a question
+        if (message.role === "assistant" && 
+            totalQuestions > 0 && 
+            currentQuestionIndex < totalQuestions) {
+          // Check if this message contains a question
+          if (message.transcript.includes("?")) {
+            setCurrentQuestionIndex(prev => prev + 1);
+            console.log(`Question ${currentQuestionIndex + 1}/${totalQuestions} asked`);
+          }
+        }
+        
+        // Auto-end call when all questions have been asked and answered
+        if (currentQuestionIndex >= totalQuestions && totalQuestions > 0) {
+          console.log("All questions completed, ending call automatically");
+          // Add a small delay to allow for final exchange
+          setTimeout(() => {
+            handleDisconnect();
+          }, 10000); // 10 second grace period after last question
+        }
       }
     };
 
@@ -125,7 +150,7 @@ const Agent = ({
       vapi.off("speech-end", onSpeechEnd);
       vapi.off("error", onError);
     };
-  }, []); // Empty dependency array - only run once
+  }, [currentQuestionIndex, totalQuestions, handleDisconnect]); // Include handleDisconnect in dependencies
 
   // Handle messages and call status changes
   useEffect(() => {
@@ -133,8 +158,11 @@ const Agent = ({
       setLastMessage(messages[messages.length - 1].content);
     }
 
-    const handleGenerateFeedback = async (messages: SavedMessage[]) => {
-      console.log("handleGenerateFeedback");
+    const handleGenerateFeedback = async (messages: SavedMessage[]) => {      
+      toast.loading("Generating feedback from your interview...", {
+        duration: 5000,
+        id: "feedback-toast"
+      });
 
       const { success, feedbackId: id } = await createFeedback({
         interviewId: interviewId!,
@@ -144,9 +172,15 @@ const Agent = ({
       });
 
       if (success && id) {
+        toast.success("Feedback generated successfully!", {
+          id: "feedback-toast"
+        });
         router.push(`/interview/${interviewId}/feedback`);
       } else {
         console.log("Error saving feedback");
+        toast.error("Failed to generate feedback", {
+          id: "feedback-toast"
+        });
         router.push("/");
       }
     };
