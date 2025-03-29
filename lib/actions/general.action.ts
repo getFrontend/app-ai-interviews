@@ -26,7 +26,7 @@ export async function createFeedback(params: CreateFeedbackParams) {
       const feedback = {
         interviewId: interviewId,
         userId: userId,
-        totalScore: 0, // Very low score for non-participation
+        totalScore: 1, // Very low score for non-participation
         categoryScores: [
           { name: "Communication Skills", score: 5, comment: "The candidate provided minimal or no responses during the interview." },
           { name: "Technical Knowledge", score: 0, comment: "Unable to assess technical knowledge due to lack of participation." },
@@ -61,22 +61,30 @@ export async function createFeedback(params: CreateFeedbackParams) {
       }),
       schema: feedbackSchema,
       prompt: `
-        You are an AI interviewer analyzing a mock interview. Your task is to evaluate the candidate based on structured categories. Be thorough and detailed in your analysis. Don't be lenient with the candidate. If there are mistakes or areas for improvement, point them out.
-        
-        Important: If the candidate provided very few responses or ended the interview prematurely, assign very low scores (below 20) to reflect the lack of participation.
+        You are an AI interviewer analyzing a mock interview. Your task is to evaluate the candidate based on structured categories. Be thorough and detailed in your analysis.
+
+        Important scoring guidelines:
+        - Score from 0 to 100 in each category
+        - Reserve scores of 90-100 for truly exceptional answers that demonstrate mastery
+        - A score of 100 should be possible for candidates who provide comprehensive, accurate, and insightful responses
+        - Scores of 0-20 indicate minimal or incorrect responses
+        - Scores of 40-60 indicate average performance
+        - Scores of 70-80 indicate good but not exceptional performance
         
         Transcript:
         ${formattedTranscript}
 
         Please score the candidate from 0 to 100 in the following areas. Do not add categories other than the ones provided:
-        - **Communication Skills**: Clarity, articulation, structured responses.
-        - **Technical Knowledge**: Understanding of key concepts for the role.
-        - **Problem-Solving**: Ability to analyze problems and propose solutions.
-        - **Cultural & Role Fit**: Alignment with company values and job role.
-        - **Confidence & Clarity**: Confidence in responses, engagement, and clarity.
+        - **Communication Skills**: Clarity, articulation, structured responses, appropriate technical vocabulary.
+        - **Technical Knowledge**: Deep understanding of key concepts, accurate explanations, awareness of best practices.
+        - **Problem-Solving**: Ability to analyze problems, propose effective solutions, consider edge cases and alternatives.
+        - **Cultural & Role Fit**: Alignment with company values, teamwork indicators, understanding of the role.
+        - **Confidence & Clarity**: Confidence in responses, engagement, clarity of thought, minimal hesitation.
+        
+        For candidates who demonstrate exceptional mastery in all areas, do not hesitate to award scores in the 90-100 range.
         `,
       system:
-        "You are a professional interviewer analyzing a mock interview. Your task is to evaluate the candidate based on structured categories. Be strict and fair in your assessment.",
+        "You are a professional interviewer analyzing a mock interview. Your task is to evaluate the candidate based on structured categories. Be fair and objective, rewarding excellence when demonstrated.",
     });
 
     const feedback = {
