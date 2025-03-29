@@ -50,7 +50,7 @@ const Feedback = async ({ params }: RouteParams) => {
             <Image src="/calendar.svg" width={22} height={22} alt="calendar" />
             <p>
               {feedback?.createdAt
-                ? dayjs(feedback.createdAt).format("MMM D, YYYY h:mm A")
+                ? dayjs(feedback.createdAt).format("MMM D, YYYY HH:mm")
                 : "N/A"}
             </p>
           </div>
