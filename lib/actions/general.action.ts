@@ -17,6 +17,44 @@ export async function createFeedback(params: CreateFeedbackParams) {
       )
       .join("");
 
+    // Check if there's meaningful user participation
+    const userMessages = transcript.filter(msg => msg.role === "user");
+    const hasMinimalParticipation = userMessages.length <= 1;
+    
+    // If user barely participated, assign a very low score
+    if (hasMinimalParticipation) {
+      const feedback = {
+        interviewId: interviewId,
+        userId: userId,
+        totalScore: 0, // Very low score for non-participation
+        categoryScores: [
+          { name: "Communication Skills", score: 5, comment: "The candidate provided minimal or no responses during the interview." },
+          { name: "Technical Knowledge", score: 0, comment: "Unable to assess technical knowledge due to lack of participation." },
+          { name: "Problem Solving", score: 0, comment: "Unable to assess problem-solving skills due to lack of participation." },
+          { name: "Cultural Fit", score: 10, comment: "Minimal interaction makes it difficult to assess cultural fit." },
+          { name: "Confidence and Clarity", score: 5, comment: "The candidate did not engage sufficiently to demonstrate confidence or clarity." }
+        ],
+        strengths: ["No strengths identified due to limited participation."],
+        areasForImprovement: [
+          "Active participation in the interview process",
+          "Providing detailed responses to questions",
+          "Completing the full interview to allow proper assessment"
+        ],
+        finalAssessment: "The interview was ended prematurely with minimal or no participation from the candidate. A proper assessment could not be made due to insufficient interaction. We recommend retaking the interview with full engagement to receive meaningful feedback.",
+        createdAt: new Date().toISOString(),
+      };
+
+      let feedbackRef;
+      if (feedbackId) {
+        feedbackRef = db.collection("feedback").doc(feedbackId);
+      } else {
+        feedbackRef = db.collection("feedback").doc();
+      }
+      await feedbackRef.set(feedback);
+      return { success: true, feedbackId: feedbackRef.id };
+    }
+
+    // Normal AI-based assessment for users who participated
     const { object } = await generateObject({
       model: google("gemini-2.0-flash-001", {
         structuredOutputs: false,
@@ -24,6 +62,9 @@ export async function createFeedback(params: CreateFeedbackParams) {
       schema: feedbackSchema,
       prompt: `
         You are an AI interviewer analyzing a mock interview. Your task is to evaluate the candidate based on structured categories. Be thorough and detailed in your analysis. Don't be lenient with the candidate. If there are mistakes or areas for improvement, point them out.
+        
+        Important: If the candidate provided very few responses or ended the interview prematurely, assign very low scores (below 20) to reflect the lack of participation.
+        
         Transcript:
         ${formattedTranscript}
 
@@ -35,7 +76,7 @@ export async function createFeedback(params: CreateFeedbackParams) {
         - **Confidence & Clarity**: Confidence in responses, engagement, and clarity.
         `,
       system:
-        "You are a professional interviewer analyzing a mock interview. Your task is to evaluate the candidate based on structured categories",
+        "You are a professional interviewer analyzing a mock interview. Your task is to evaluate the candidate based on structured categories. Be strict and fair in your assessment.",
     });
 
     const feedback = {
