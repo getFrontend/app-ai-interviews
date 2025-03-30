@@ -45,16 +45,16 @@ const AnimatedCTAButton = ({
         <motion.div
           className="absolute inset-0 rounded-full bg-gradient-to-r from-purple-600 via-pink-500 to-orange-400 opacity-70 blur-lg"
           style={{ 
-            paddingInline: '20px',
+            paddingInline: '15px',
             paddingBlock: '10px',
-            marginInline: '-20px',
+            marginInline: '-15px',
             marginBlock: '-10px',
             background: 'linear-gradient(90deg, rgba(124, 58, 237, 0.8) 0%, rgba(236, 72, 153, 0.8) 50%, rgba(234, 88, 12, 0.8) 100%)'
           }}
           initial={{ opacity: 0}}
           animate={{ 
             opacity: [0.4, 0.7, 0.4],
-            scale: [1, 1.05, 1]
+            scale: [0.8, 1.05, 0.8]
           }}
           transition={{ 
             duration: 2.5, 
