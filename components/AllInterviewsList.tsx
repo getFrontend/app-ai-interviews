@@ -11,7 +11,8 @@ interface AllInterviewsListProps {
 export default function AllInterviewsList({ 
   renderedCards 
 }: AllInterviewsListProps) {
-  const [itemsToShow, setItemsToShow] = useState(9);
+  const interviewsPerPage = Number(process.env.NEXT_PUBLIC_INTERVIEWS_PER_PAGE) || 3;
+  const [itemsToShow, setItemsToShow] = useState(interviewsPerPage);
   const incrementBy = 6;
 
   const handleLoadMore = () => {
