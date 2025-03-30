@@ -57,7 +57,7 @@ const InterviewCard = async ({
 
   return (
     <div className="card-border w-[360px] max-sm:w-full min-h-96">
-      <div className="card-interview relative">
+      <div className="card-interview">
         <div>
           {/* Type Badge - Top Right */}
           <div

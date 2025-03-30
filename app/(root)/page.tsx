@@ -1,6 +1,8 @@
 import Image from "next/image";
 
 import InterviewCard from "@/components/InterviewCard";
+import AllInterviewsList from "@/components/AllInterviewsList";
+import ClientInterviewCard from "@/components/ClientInterviewCard";
 
 import { getCurrentUser } from "@/lib/actions/auth.action";
 import {
@@ -21,6 +23,35 @@ async function Home() {
 
   const hasPastInterviews = (userInterviews?.length ?? 0) > 0;
   const hasUpcomingInterviews = (allInterview?.length ?? 0) > 0;
+
+  // Pre-render all interview cards on the server
+  const renderedInterviewCards = await Promise.all(
+    (allInterview || []).map(async (interview) => {
+      const interviewCard = await (
+        <InterviewCard
+          key={interview.id}
+          userId={user?.id}
+          interviewId={interview.id}
+          role={interview.role}
+          type={interview.type}
+          techstack={interview.techstack}
+          createdAt={interview.createdAt}
+          coverImage={interview.coverImage}
+          level={interview.level}
+          questions={interview.questions}
+        />
+      );
+      
+      return (
+        <ClientInterviewCard
+          key={interview.id}
+          interview={interview}
+          userId={user?.id}
+          interviewCard={interviewCard}
+        />
+      );
+    })
+  );
 
   return (
     <>
@@ -81,26 +112,11 @@ async function Home() {
       <section className="flex flex-col gap-6 mt-8">
         <h2>All Interviews</h2>
 
-        <div className="interviews-section">
-          {hasUpcomingInterviews ? (
-            allInterview?.map((interview) => (
-              <InterviewCard
-                key={interview.id}
-                userId={user?.id}
-                interviewId={interview.id}
-                role={interview.role}
-                type={interview.type}
-                techstack={interview.techstack}
-                createdAt={interview.createdAt}
-                coverImage={interview.coverImage}
-                level={interview.level}
-                questions={interview.questions}
-              />
-            ))
-          ) : (
-            <p>There are no interviews available</p>
-          )}
-        </div>
+        {hasUpcomingInterviews ? (
+          <AllInterviewsList renderedCards={renderedInterviewCards} />
+        ) : (
+          <p>There are no interviews available</p>
+        )}
       </section>
 
       <Footer />
