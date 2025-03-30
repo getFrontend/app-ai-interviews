@@ -20,11 +20,19 @@ const AnimatedCTAButton = ({
 }: AnimatedCTAButtonProps) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+  const [showGlow, setShowGlow] = useState(false);
 
   // Initialize on client-side
   useEffect(() => {
     setIsMounted(true);
-  }, []);
+    
+    // Delay showing the glow effect until after the button appears
+    const timer = setTimeout(() => {
+      setShowGlow(true);
+    }, (delay + 1) * 1000); // Convert to milliseconds
+    
+    return () => clearTimeout(timer);
+  }, [delay]);
 
   if (!isMounted) {
     return null; // Prevent SSR flash
@@ -33,26 +41,30 @@ const AnimatedCTAButton = ({
   return (
     <div className="relative inline-block mx-auto">
       {/* Glow effect */}
-      <motion.div
-        className="absolute inset-0 rounded-full bg-gradient-to-r from-purple-600 via-pink-500 to-orange-400 opacity-70 blur-lg"
-        style={{ 
-          padding: '10px',
-          margin: '-10px',
-          background: 'linear-gradient(90deg, rgba(124, 58, 237, 0.8) 0%, rgba(236, 72, 153, 0.8) 50%, rgba(234, 88, 12, 0.8) 100%)'
-        }}
-        initial={{ opacity: 0 }}
-        animate={{ 
-          opacity: [0.4, 0.7, 0.4],
-          scale: [1, 1.05, 1]
-        }}
-        transition={{ 
-          duration: 2, 
-          ease: "easeInOut",
-          repeat: Infinity,
-          repeatType: "reverse"
-        }}
-        whileHover={{ opacity: 0.9, scale: 1.05 }}
-      />
+      {showGlow && (
+        <motion.div
+          className="absolute inset-0 rounded-full bg-gradient-to-r from-purple-600 via-pink-500 to-orange-400 opacity-70 blur-lg"
+          style={{ 
+            paddingInline: '20px',
+            paddingBlock: '10px',
+            marginInline: '-20px',
+            marginBlock: '-10px',
+            background: 'linear-gradient(90deg, rgba(124, 58, 237, 0.8) 0%, rgba(236, 72, 153, 0.8) 50%, rgba(234, 88, 12, 0.8) 100%)'
+          }}
+          initial={{ opacity: 0}}
+          animate={{ 
+            opacity: [0.4, 0.7, 0.4],
+            scale: [1, 1.05, 1]
+          }}
+          transition={{ 
+            duration: 2.5, 
+            ease: "easeInOut",
+            repeat: Infinity,
+            repeatType: "reverse"
+          }}
+          // whileHover={{ opacity: 0.9, scale: 1.05 }}
+        />
+      )}
       
       {/* Button */}
       <motion.div
