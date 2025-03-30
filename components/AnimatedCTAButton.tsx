@@ -19,26 +19,11 @@ const AnimatedCTAButton = ({
   delay = 0.2
 }: AnimatedCTAButtonProps) => {
   const [isHovered, setIsHovered] = useState(false);
-  const [isPulsing, setIsPulsing] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
 
   // Initialize on client-side
   useEffect(() => {
     setIsMounted(true);
-    
-    // Initial pulse to draw attention
-    setTimeout(() => {
-      setIsPulsing(true);
-      setTimeout(() => setIsPulsing(false), 1200);
-    }, 1000);
-    
-    // Periodic pulse effect
-    const interval = setInterval(() => {
-      setIsPulsing(true);
-      setTimeout(() => setIsPulsing(false), 1200);
-    }, 8000);
-    
-    return () => clearInterval(interval);
   }, []);
 
   if (!isMounted) {
@@ -51,20 +36,22 @@ const AnimatedCTAButton = ({
       <motion.div
         className="absolute inset-0 rounded-full bg-gradient-to-r from-purple-600 via-pink-500 to-orange-400 opacity-70 blur-lg"
         style={{ 
-          padding: '8px',
-          margin: '-8px',
+          padding: '10px',
+          margin: '-10px',
           background: 'linear-gradient(90deg, rgba(124, 58, 237, 0.8) 0%, rgba(236, 72, 153, 0.8) 50%, rgba(234, 88, 12, 0.8) 100%)'
         }}
         initial={{ opacity: 0 }}
         animate={{ 
-          opacity: isPulsing ? [0.6, 0.9, 0.6] : 0.6,
+          opacity: [0.4, 0.7, 0.4],
+          scale: [1, 1.05, 1]
         }}
         transition={{ 
-          duration: 1.5,
+          duration: 2, 
           ease: "easeInOut",
           repeat: Infinity,
+          repeatType: "reverse"
         }}
-        whileHover={{ opacity: 0.9 }}
+        whileHover={{ opacity: 0.9, scale: 1.05 }}
       />
       
       {/* Button */}
@@ -88,15 +75,11 @@ const AnimatedCTAButton = ({
             
             <motion.div
               animate={{ 
-                x: isHovered ? 8 : [0, 4, 0]
+                x: isHovered ? 8 : 0
               }}
               transition={{ 
-                x: {
-                  duration: isHovered ? 0.2 : 2,
-                  ease: isHovered ? "easeOut" : "easeInOut",
-                  repeat: isHovered ? 0 : Infinity,
-                  repeatType: "reverse"
-                }
+                duration: 0.2,
+                ease: "easeOut"
               }}
             >
               <ArrowRight size={18} />
