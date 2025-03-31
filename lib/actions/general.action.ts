@@ -28,11 +28,11 @@ export async function createFeedback(params: CreateFeedbackParams) {
         userId: userId,
         totalScore: 1, // Very low score for non-participation
         categoryScores: [
-          { name: "Communication Skills", score: 5, comment: "The candidate provided minimal or no responses during the interview." },
-          { name: "Technical Knowledge", score: 0, comment: "Unable to assess technical knowledge due to lack of participation." },
-          { name: "Problem Solving", score: 0, comment: "Unable to assess problem-solving skills due to lack of participation." },
-          { name: "Cultural Fit", score: 10, comment: "Minimal interaction makes it difficult to assess cultural fit." },
-          { name: "Confidence and Clarity", score: 5, comment: "The candidate did not engage sufficiently to demonstrate confidence or clarity." }
+          { name: "Communication Skills", score: 1, comment: "The candidate provided minimal or no responses during the interview." },
+          { name: "Technical Knowledge", score: 1, comment: "Unable to assess technical knowledge due to lack of participation." },
+          { name: "Problem Solving", score: 1, comment: "Unable to assess problem-solving skills due to lack of participation." },
+          { name: "Cultural Fit", score: 1, comment: "Minimal interaction makes it difficult to assess cultural fit." },
+          { name: "Confidence and Clarity", score: 1, comment: "The candidate did not engage sufficiently to demonstrate confidence or clarity." }
         ],
         strengths: ["No strengths identified due to limited participation."],
         areasForImprovement: [
