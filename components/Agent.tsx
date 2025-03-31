@@ -83,24 +83,43 @@ const Agent = ({
         const newMessage = { role: message.role, content: message.transcript };
         setMessages((prev) => [...prev, newMessage]);
         
-        // Track question progress - increment counter when AI asks a question
+        // Track question progress - only increment counter when AI asks a MAIN question
+        // We'll use a more sophisticated approach to identify main questions
         if (message.role === "assistant" && 
             totalQuestions > 0 && 
             currentQuestionIndex < totalQuestions) {
-          // Check if this message contains a question
-          if (message.transcript.includes("?")) {
-            setCurrentQuestionIndex(prev => prev + 1);
-            console.log(`Question ${currentQuestionIndex + 1}/${totalQuestions} asked`);
+          
+          // Check if this message contains a question that matches one of our prepared questions
+          if (message.transcript.includes("?") && questions) {
+            // Try to match this message with one of our prepared questions
+            const isMainQuestion = questions.some(question => {
+              // Create a simplified version of both texts for comparison (lowercase, no punctuation)
+              const simplifiedTranscript = message.transcript.toLowerCase().replace(/[^\w\s]/g, '');
+              const simplifiedQuestion = question.toLowerCase().replace(/[^\w\s]/g, '');
+              
+              // Check if the transcript contains a significant portion of the question
+              // This helps match even if the AI rephrases slightly
+              return simplifiedTranscript.includes(simplifiedQuestion.substring(0, Math.min(30, simplifiedQuestion.length)));
+            });
+            
+            if (isMainQuestion) {
+              setCurrentQuestionIndex(prev => prev + 1);
+              console.log(`Question ${currentQuestionIndex + 1}/${totalQuestions} asked (matched with prepared question)`);
+            }
           }
         }
         
-        // Auto-end call when all questions have been asked and answered
+        // Auto-end call when all questions have been asked AND answered
+        // Only consider ending after the last question has been asked
         if (currentQuestionIndex >= totalQuestions && totalQuestions > 0) {
-          console.log("All questions completed, ending call automatically");
-          // Add a small delay to allow for final exchange
-          setTimeout(() => {
-            handleDisconnect();
-          }, 10000); // 10 second grace period after last question
+          // Only end the call after the user has responded to the last question
+          if (message.role === "user") {
+            console.log("All questions completed and user has responded, ending call automatically");
+            // Add a longer delay to allow for final exchange and closing remarks
+            setTimeout(() => {
+              handleDisconnect();
+            }, 15000); // 15 second grace period after user's final answer
+          }
         }
       }
     };
@@ -150,7 +169,7 @@ const Agent = ({
       vapi.off("speech-end", onSpeechEnd);
       vapi.off("error", onError);
     };
-  }, [currentQuestionIndex, totalQuestions, handleDisconnect]); // Include handleDisconnect in dependencies
+  }, [currentQuestionIndex, totalQuestions, handleDisconnect, questions]); 
 
   // Handle messages and call status changes
   useEffect(() => {
