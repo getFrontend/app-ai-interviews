@@ -8,7 +8,7 @@
 
 **Pytai** is an intelligent voice-driven interview platform that helps companies assess candidates in real time using conversational AI. The platform enables automated, consistent, and scalable interviews with dynamic questioning, real-time voice interaction, and comprehensive candidate scoring.
 
-![PYTAI Screenshot](./public/pytai-site-preview-optimize.png)
+![PYTAI Screenshot](./public/pytai-site-preview-2.png)
 
 By simulating realistic interview scenarios, Pytai helps:
 - **Candidates** practice and improve their interview skills
