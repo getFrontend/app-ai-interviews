@@ -112,6 +112,8 @@ export const mappings = {
   "spring": "spring",
   "spring framework": "spring",
   hibernate: "hibernate",
+  arduino: "arduino",
+  unity: "unity",
 };
 
 export const interviewer: CreateAssistantDTO = {
