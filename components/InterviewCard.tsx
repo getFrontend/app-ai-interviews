@@ -89,7 +89,7 @@ const InterviewCard = async ({
           />
 
           {/* Interview Role */}
-          <h3 className="mt-5 capitalize">{role} Interview</h3>
+          <h3 className="my-5 capitalize">{role} Interview</h3>
 
           {/* Date & Score & Questions Count */}
           <div className="flex flex-row flex-wrap gap-5 mt-3">
@@ -121,7 +121,7 @@ const InterviewCard = async ({
                 alt="question icon" 
               />
               <p>
-                {questions?.length || 0} {questions?.length === 1 ? "question" : "questions"}
+                {questions?.length || 0}
               </p>
             </div>
           </div>
