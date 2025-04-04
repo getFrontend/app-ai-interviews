@@ -2,11 +2,11 @@ import dayjs from "dayjs";
 import Link from "next/link";
 import Image from "next/image";
 
-import { Button } from "./ui/button";
 import DisplayTechIcons from "./DisplayTechIcons";
 
 import { cn, getRandomInterviewCover } from "@/lib/utils";
 import { getFeedbackByInterviewId } from "@/lib/actions/general.action";
+import { MetalButton } from "./MetalButton";
 
 const InterviewCard = async ({
   interviewId,
@@ -136,7 +136,6 @@ const InterviewCard = async ({
         <div className="flex flex-row justify-between">
           <DisplayTechIcons techStack={techstack} />
 
-          <Button className="btn-primary">
             <Link
               href={
                 feedback
@@ -144,9 +143,8 @@ const InterviewCard = async ({
                   : `/interview/${interviewId}`
               }
             >
-              {feedback ? "Check Feedback" : "Start Interview"}
+              {feedback ? <MetalButton variant="primary">Check Feedback</MetalButton> : <MetalButton variant="bronze">Start Interview</MetalButton>}
             </Link>
-          </Button>
         </div>
       </div>
     </div>
