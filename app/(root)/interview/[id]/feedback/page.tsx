@@ -91,7 +91,7 @@ const Feedback = async ({ params }: RouteParams) => {
       </div>
 
       <div className="buttons mt-4">
-          <Link href="/" className="flex w-full justify-center lg:justify-end items-center">
+          <Link href="/">
             <MetalButton 
               className="text-md px-8"
               variant="primary"
@@ -99,10 +99,7 @@ const Feedback = async ({ params }: RouteParams) => {
               Back to dashboard
             </MetalButton>
           </Link>
-          <Link
-            href={`/interview/${id}`}
-            className="flex w-full justify-center lg:justify-start items-center"
-          >
+          <Link href={`/interview/${id}`}>
             <MetalButton 
               className="text-md px-8"
               variant="bronze"
