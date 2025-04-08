@@ -125,13 +125,11 @@ const Agent = ({
     };
 
     const onSpeechStart = () => {
-      console.log("Speech start!");
       setLastActivityTimestamp(Date.now()); // Update timestamp when speech starts
       setIsSpeaking(true);
     };
 
     const onSpeechEnd = () => {
-      console.log("Speech end!");
       setIsSpeaking(false);
     };
 
