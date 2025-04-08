@@ -114,6 +114,10 @@ export const mappings = {
   hibernate: "hibernate",
   arduino: "arduino",
   unity: "unity",
+  php: "php",
+  symfony: "symfony",
+  bun: "bun",
+  cloudflare: "cloudflare"
 };
 
 export const interviewer: CreateAssistantDTO = {
