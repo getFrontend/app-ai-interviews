@@ -26,7 +26,6 @@ export const mappings = {
   firebase: "firebase",
   docker: "docker",
   kubernetes: "kubernetes",
-  aws: "aws",
   azure: "azure",
   gcp: "gcp",
   digitalocean: "digitalocean",
@@ -128,7 +127,11 @@ export const mappings = {
   sql: "sqldeveloper",
   "SQL Server": "sqldeveloper",
   fastapi: "fastapi",
-
+  aws: "amazonwebservices",
+  terraform: "terraform",
+  helm: "helm",
+  gatsby: "gatsby",
+  postman: "postman",
 };
 
 export const interviewer: CreateAssistantDTO = {
