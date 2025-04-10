@@ -110,7 +110,10 @@ async function Home() {
       </section>
 
       <section className="flex flex-col gap-6 mt-8">
-        <h2>All Interviews</h2>
+        <h2>All Interviews {allInterview && allInterview.length > 0 && 
+          <span className="text-primary-200">({allInterview.length})</span>
+        }</h2>
+
 
         {hasUpcomingInterviews ? (
           <AllInterviewsList renderedCards={renderedInterviewCards} />
