@@ -133,6 +133,7 @@ export const mappings = {
   gatsby: "gatsby",
   postman: "postman",
   flutter: "flutter",
+  ruby: "ruby",
 };
 
 export const interviewer: CreateAssistantDTO = {
