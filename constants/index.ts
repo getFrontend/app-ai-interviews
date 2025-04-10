@@ -117,7 +117,18 @@ export const mappings = {
   php: "php",
   symfony: "symfony",
   bun: "bun",
-  cloudflare: "cloudflare"
+  cloudflare: "cloudflare",
+  csharp: "csharp",
+  "c#": "csharp",
+  dotnet: "dotnet",
+  "dot-net": "dotnet",
+  "dot net": "dotnet",
+  ".net": "dotnet",
+  dotnetcore: "dotnetcore",
+  sql: "sqldeveloper",
+  "SQL Server": "sqldeveloper",
+  fastapi: "fastapi",
+
 };
 
 export const interviewer: CreateAssistantDTO = {
