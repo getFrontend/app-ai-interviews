@@ -108,7 +108,7 @@ export const mappings = {
   "objective-c": "objective-c",
   "objective-c++": "objective-c",
   "objective c++": "objective-c",
-  "spring": "spring",
+  spring: "spring",
   "spring framework": "spring",
   hibernate: "hibernate",
   arduino: "arduino",
@@ -132,6 +132,7 @@ export const mappings = {
   helm: "helm",
   gatsby: "gatsby",
   postman: "postman",
+  flutter: "flutter",
 };
 
 export const interviewer: CreateAssistantDTO = {
