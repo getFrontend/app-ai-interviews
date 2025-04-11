@@ -42,7 +42,7 @@ const InterviewCard = async ({
     "entry level": "bg-emerald-600",
     beginner: "bg-teal-600",
     junior: "bg-lime-600",
-    intermediate: "bg-amber-500",
+    "mid to senior": "bg-amber-500",
     senior: "bg-orange-500",
     advanced: "bg-sky-600",
     expert: "bg-indigo-600",
