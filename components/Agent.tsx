@@ -315,7 +315,7 @@ const Agent = ({
             <span className="relative">
               {callStatus === "INACTIVE" || callStatus === "FINISHED"
                 ? "Call"
-                : ". . ."}
+                : <span className="dots-loading">. . .</span>}
             </span>
           </button>
         ) : (
