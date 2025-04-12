@@ -141,6 +141,9 @@ export const mappings = {
   tensorflow: "tensorflow",
   pytorch: "pytorch",
   jupyter: "jupyter",
+  "c++": "cplusplus",
+  django: "django",
+  json: "json",
 };
 
 export const interviewer: CreateAssistantDTO = {
