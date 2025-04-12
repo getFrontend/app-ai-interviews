@@ -136,6 +136,11 @@ export const mappings = {
   postman: "postman",
   flutter: "flutter",
   ruby: "ruby",
+  prometheus: "prometheus",
+  grafana: "grafana",
+  tensorflow: "tensorflow",
+  pytorch: "pytorch",
+  jupyter: "jupyter",
 };
 
 export const interviewer: CreateAssistantDTO = {
